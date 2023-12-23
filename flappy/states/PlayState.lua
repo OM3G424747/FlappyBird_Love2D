@@ -1,6 +1,7 @@
 --[[
     PlayState Class
     Author: Colton Ogden
+    Edited By: Chris Joubert
     cogden@cs50.harvard.edu
 
     The PlayState class is the bulk of the game, where the player actually controls the bird and
@@ -17,6 +18,8 @@ PIPE_HEIGHT = 288
 BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
 
+PIPE_TIMER = math.random(2,6)
+
 function PlayState:init()
     self.bird = Bird()
     self.pipePairs = {}
@@ -32,12 +35,24 @@ function PlayState:update(dt)
     self.timer = self.timer + dt
 
     -- spawn a new pipe pair every second and a half
-    if self.timer > 2 then
+    if self.timer > PIPE_TIMER then
+
+        -- reroll timer for next pipe
+        PIPE_TIMER = math.random(2,6)
+        
         -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
         -- no higher than 10 pixels below the top edge of the screen,
         -- and no lower than a gap length (90 pixels) from the bottom
         local y = math.max(-PIPE_HEIGHT + 10, 
             math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+        
+        -- ensures the pipes don't continue to force the player downward
+        -- rerolls RNG to move the pipes up again
+        if y + 90 > 260 then
+            y = math.max(-PIPE_HEIGHT + 10, 
+            math.min(self.lastY + math.random(-20, 0), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+        end    
+        
         self.lastY = y
 
         -- add a new pipe pair at the end of the screen at our new Y

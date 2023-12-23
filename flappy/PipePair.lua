@@ -11,16 +11,15 @@
 
 PipePair = Class{}
 
--- set new random seed for RNG to be used on pipe gaps
-math.randomseed(os.time())
-
-
 -- size of the gap between pipes
-local GAP_HEIGHT = 90
+local GAP_HEIGHT = math.random(90, 190)
 
 function PipePair:init(y)
     -- flag to hold whether this pair has been scored (jumped through)
     self.scored = false
+    
+    -- reroll gap height
+    GAP_HEIGHT = math.random(90, 190)
 
     -- initialize pipes past the end of the screen
     self.x = VIRTUAL_WIDTH + 32
@@ -28,11 +27,19 @@ function PipePair:init(y)
     -- y value is for the topmost pipe; gap is a vertical shift of the second lower pipe
     self.y = y
 
+    -- sets bottom pipe y position, with gap height 
+    -- and additional height of up to 90 randomly added
+    self.y_plus_gap = self.y + PIPE_HEIGHT + GAP_HEIGHT
+    -- ensures the bottom pipe remains visible
+    if self.y_plus_gap > 240 then
+        self.y_plus_gap = 240
+    end
+
     -- instantiate two pipes that belong to this pair
     self.pipes = {
         ['upper'] = Pipe('top', self.y),
         -- adds rng to set different size gaps between the pipes
-        ['lower'] = Pipe('bottom', self.y + PIPE_HEIGHT + GAP_HEIGHT + math.random(0, 60))
+        ['lower'] = Pipe('bottom', self.y_plus_gap)
     }
 
     -- whether this pipe pair is ready to be removed from the scene
