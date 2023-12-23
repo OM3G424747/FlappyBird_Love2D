@@ -2,6 +2,7 @@
     PipePair Class
 
     Author: Colton Ogden
+    Edited By: Chris Joubert
     cogden@cs50.harvard.edu
 
     Used to represent a pair of pipes that stick together as they scroll, providing an opening
@@ -9,6 +10,10 @@
 ]]
 
 PipePair = Class{}
+
+-- set new random seed for RNG to be used on pipe gaps
+math.randomseed(os.time())
+
 
 -- size of the gap between pipes
 local GAP_HEIGHT = 90
@@ -26,7 +31,8 @@ function PipePair:init(y)
     -- instantiate two pipes that belong to this pair
     self.pipes = {
         ['upper'] = Pipe('top', self.y),
-        ['lower'] = Pipe('bottom', self.y + PIPE_HEIGHT + GAP_HEIGHT)
+        -- adds rng to set different size gaps between the pipes
+        ['lower'] = Pipe('bottom', self.y + PIPE_HEIGHT + GAP_HEIGHT + math.random(0, 60))
     }
 
     -- whether this pipe pair is ready to be removed from the scene
