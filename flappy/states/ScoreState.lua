@@ -33,5 +33,20 @@ function ScoreState:render()
     love.graphics.setFont(mediumFont)
     love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
 
+    -- sets initial trophy image as bronze, then checks the score for the following conditions
+    -- over 30 gets silver
+    -- over 60 gets gold
+    local trophy =  love.graphics.newImage('bronze_trophy.png')
+
+    if self.score > 30 then
+        trophy =  love.graphics.newImage('silver_trophy.png')
+
+    elseif self.score > 60 then
+        trophy =  love.graphics.newImage('gold_trophy.png')
+    end
+    
+    -- displays trophy below the player's score
+    love.graphics.draw(trophy, 230, 120)
+
     love.graphics.printf('Press Enter to Play Again!', 0, 160, VIRTUAL_WIDTH, 'center')
 end
