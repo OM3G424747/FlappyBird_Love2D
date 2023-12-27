@@ -1,8 +1,8 @@
 --[[
     GD50 2018
     Flappy Bird Remake James was here 2018
-
     Author: Colton Ogden
+    Edited By: Chris Joubert
     cogden@cs50.harvard.edu
 
     A mobile game by Dong Nguyen that went viral in 2013, utilizing a very simple
@@ -51,6 +51,10 @@ WINDOW_HEIGHT = 720
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
+-- sets game values to a suspended state when true 
+-- resets values to last saved values after being returned to false
+IS_PAUSED = false
+
 local background = love.graphics.newImage('background.png')
 local backgroundScroll = 0
 
@@ -61,6 +65,7 @@ local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 
 local BACKGROUND_LOOPING_POINT = 413
+
 
 function love.load()
     -- initialize our nearest-neighbor filter
@@ -127,6 +132,12 @@ function love.keypressed(key)
 
     if key == 'escape' then
         love.event.quit()
+    -- toggles pause status
+    elseif key == 'p' and not IS_PAUSED then
+        -- sets background speed to 0 to appear in suspended state
+        IS_PAUSED = true
+    elseif key == 'p' and IS_PAUSED then
+        IS_PAUSED = false
     end
 end
 
@@ -162,6 +173,17 @@ function love.update(dt)
 
     love.keyboard.keysPressed = {}
     love.mouse.buttonsPressed = {}
+
+    -- updates background scroll speed according to pause status
+    if IS_PAUSED then
+        -- sets background speed to 0 to appear in suspended state
+        BACKGROUND_SCROLL_SPEED = 0
+        GROUND_SCROLL_SPEED = 0
+        
+    elseif not IS_PAUSED then
+        BACKGROUND_SCROLL_SPEED = 30
+        GROUND_SCROLL_SPEED = 60
+    end
 end
 
 function love.draw()

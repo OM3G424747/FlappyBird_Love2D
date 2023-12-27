@@ -12,14 +12,14 @@
 PipePair = Class{}
 
 -- size of the gap between pipes
-local GAP_HEIGHT = math.random(90, 190)
+local GAP_HEIGHT = math.random(80, 190)
 
 function PipePair:init(y)
     -- flag to hold whether this pair has been scored (jumped through)
     self.scored = false
     
     -- reroll gap height
-    GAP_HEIGHT = math.random(90, 190)
+    GAP_HEIGHT = math.random(80, 190)
 
     -- initialize pipes past the end of the screen
     self.x = VIRTUAL_WIDTH + 32

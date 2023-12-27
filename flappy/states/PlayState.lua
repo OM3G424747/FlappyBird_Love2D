@@ -44,13 +44,13 @@ function PlayState:update(dt)
         -- no higher than 10 pixels below the top edge of the screen,
         -- and no lower than a gap length (90 pixels) from the bottom
         local y = math.max(-PIPE_HEIGHT + 10, 
-            math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+            math.min(self.lastY + math.random(-30, 30), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
         
         -- ensures the pipes don't continue to force the player downward
         -- rerolls RNG to move the pipes up again
-        if y + 90 > 260 then
+        if y + 80 > 260 then
             y = math.max(-PIPE_HEIGHT + 10, 
-            math.min(self.lastY + math.random(-20, 0), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+            math.min(self.lastY + math.random(-30, 0), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
         end    
         
         self.lastY = y
