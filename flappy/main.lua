@@ -90,6 +90,7 @@ function love.load()
         ['explosion'] = love.audio.newSource('explosion.wav', 'static'),
         ['hurt'] = love.audio.newSource('hurt.wav', 'static'),
         ['score'] = love.audio.newSource('score.wav', 'static'),
+        ['pause'] = love.audio.newSource('pause.wav', 'static'),
 
         -- https://freesound.org/people/xsgianni/sounds/388079/
         ['music'] = love.audio.newSource('marios_way.mp3', 'static')
@@ -98,6 +99,8 @@ function love.load()
     -- kick off music
     sounds['music']:setLooping(true)
     sounds['music']:play()
+    
+
 
     -- initialize our virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -132,14 +135,17 @@ function love.keypressed(key)
 
     if key == 'escape' then
         love.event.quit()
-    -- toggles pause status
-    elseif key == 'p' and not IS_PAUSED then
+    -- toggles pause status and plays pause audio
+    elseif key == 'p' and not IS_PAUSED and gStateMachine.active == "play" then
         -- sets background speed to 0 to appear in suspended state
         IS_PAUSED = true
-    elseif key == 'p' and IS_PAUSED then
+        sounds['pause']:play()
+    elseif key == 'p' and IS_PAUSED and gStateMachine.active == "play" then
         IS_PAUSED = false
+        sounds['pause']:play()
     end
 end
+
 
 --[[
     LÖVE2D callback fired each time a mouse button is pressed; gives us the
@@ -175,14 +181,19 @@ function love.update(dt)
     love.mouse.buttonsPressed = {}
 
     -- updates background scroll speed according to pause status
+    -- plays or stops music based on if the game is paused or not
     if IS_PAUSED then
         -- sets background speed to 0 to appear in suspended state
         BACKGROUND_SCROLL_SPEED = 0
         GROUND_SCROLL_SPEED = 0
+        -- pauses music being played
+        sounds['music']:pause()
         
     elseif not IS_PAUSED then
         BACKGROUND_SCROLL_SPEED = 30
         GROUND_SCROLL_SPEED = 60
+        -- resume music
+        sounds['music']:play()
     end
 end
 

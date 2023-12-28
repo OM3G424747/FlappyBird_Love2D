@@ -12,14 +12,14 @@
 PipePair = Class{}
 
 -- size of the gap between pipes
-local GAP_HEIGHT = math.random(80, 190)
+local GAP_HEIGHT = math.random(80, 130)
 
 function PipePair:init(y)
     -- flag to hold whether this pair has been scored (jumped through)
     self.scored = false
     
     -- reroll gap height
-    GAP_HEIGHT = math.random(80, 190)
+    GAP_HEIGHT = math.random(80, 120)
 
     -- initialize pipes past the end of the screen
     self.x = VIRTUAL_WIDTH + 32
@@ -30,6 +30,7 @@ function PipePair:init(y)
     -- sets bottom pipe y position, with gap height 
     -- and additional height of up to 90 randomly added
     self.y_plus_gap = self.y + PIPE_HEIGHT + GAP_HEIGHT
+    
     -- ensures the bottom pipe remains visible
     if self.y_plus_gap > 240 then
         self.y_plus_gap = 240
@@ -47,14 +48,17 @@ function PipePair:init(y)
 end
 
 function PipePair:update(dt)
-    -- remove the pipe from the scene if it's beyond the left edge of the screen,
-    -- else move it from right to left
-    if self.x > -PIPE_WIDTH then
-        self.x = self.x - PIPE_SPEED * dt
-        self.pipes['lower'].x = self.x
-        self.pipes['upper'].x = self.x
-    else
-        self.remove = true
+    
+    if not IS_PAUSED then
+        -- remove the pipe from the scene if it's beyond the left edge of the screen,
+        -- else move it from right to left
+        if self.x > -PIPE_WIDTH then
+            self.x = self.x - PIPE_SPEED * dt
+            self.pipes['lower'].x = self.x
+            self.pipes['upper'].x = self.x
+        else
+            self.remove = true
+        end
     end
 end
 

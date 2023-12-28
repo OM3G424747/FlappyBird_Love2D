@@ -14,6 +14,12 @@ function TitleScreenState:update(dt)
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         gStateMachine:change('countdown')
     end
+
+    -- prevents pausing intitle screen
+    if IS_PAUSED then
+        IS_PAUSED = false
+    end
+
 end
 
 function TitleScreenState:render()

@@ -31,35 +31,45 @@ function PlayState:init()
 end
 
 function PlayState:update(dt)
-    -- update timer for pipe spawning
-    self.timer = self.timer + dt
+    
+    -- prevents updating timer and logic while game is paused to prevent spawning additional pipes while paused
+    if not IS_PAUSED then
+        -- update timer for pipe spawning
+        self.timer = self.timer + dt
 
-    -- spawn a new pipe pair every second and a half
-    if self.timer > PIPE_TIMER then
+        -- spawn a new pipe pair every second and a half
+        if self.timer > PIPE_TIMER then
 
-        -- reroll timer for next pipe
-        PIPE_TIMER = math.random(2,6)
-        
-        -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
-        -- no higher than 10 pixels below the top edge of the screen,
-        -- and no lower than a gap length (90 pixels) from the bottom
-        local y = math.max(-PIPE_HEIGHT + 10, 
-            math.min(self.lastY + math.random(-30, 30), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
-        
-        -- ensures the pipes don't continue to force the player downward
-        -- rerolls RNG to move the pipes up again
-        if y + 80 > 260 then
-            y = math.max(-PIPE_HEIGHT + 10, 
-            math.min(self.lastY + math.random(-30, 0), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+            -- reroll timer for next pipe
+            PIPE_TIMER = math.random(2,5)
+            
+            -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
+            -- no higher than 10 pixels below the top edge of the screen,
+            -- and no lower than a gap length (90 pixels) from the bottom
+            local y = math.max(-PIPE_HEIGHT + 10, 
+                math.min(self.lastY + math.random(-50, 50), VIRTUAL_HEIGHT - 80 - PIPE_HEIGHT))
+            
+            -- the follow conditions check if pipes spawn to close to the top or bottom frequently
+            -- these conditions move the pipes upwards or downwards to prevent a pattern that's too frequent
+            -- prevents top pipes from spawning too far up
+            if y < 30 - PIPE_HEIGHT then
+                y = 30 - PIPE_HEIGHT + math.random(0, 60)
+
+            elseif y > -130 then
+                y = -130 + math.random(-60, 0)
+                
+            end    
+
+            y_debug = y
+            self.lastY = y
+
+            -- add a new pipe pair at the end of the screen at our new Y
+            table.insert(self.pipePairs, PipePair(y))
+
+            -- reset timer
+
+            self.timer = 0
         end    
-        
-        self.lastY = y
-
-        -- add a new pipe pair at the end of the screen at our new Y
-        table.insert(self.pipePairs, PipePair(y))
-
-        -- reset timer
-        self.timer = 0
     end
 
     -- for every pair of pipes..
@@ -125,6 +135,12 @@ function PlayState:render()
     love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
 
     self.bird:render()
+
+    -- displays the text "PAUSED" pm screem of the game is paused
+    if IS_PAUSED then
+        love.graphics.printf('PAUSED', 0, 100, VIRTUAL_WIDTH, 'center')
+    end
+
 end
 
 --[[

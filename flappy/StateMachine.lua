@@ -1,6 +1,7 @@
 --[[
 	StateMachine Class
 	Author: Colton Ogden
+	Edited by: Chris Joubert
 	cogden@cs50.harvard.edu
 
 	Code taken and edited from lessons in http://howtomakeanrpg.com
@@ -46,9 +47,12 @@ function StateMachine:init(states)
 	}
 	self.states = states or {} -- [name] -> [function that returns states]
 	self.current = self.empty
+	-- set's active state as string for reading
+	self.active = self.empty
 end
 
 function StateMachine:change(stateName, enterParams)
+	self.active = stateName
 	assert(self.states[stateName]) -- state must exist!
 	self.current:exit()
 	self.current = self.states[stateName]()

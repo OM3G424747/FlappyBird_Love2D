@@ -1,6 +1,7 @@
 --[[
     ScoreState Class
     Author: Colton Ogden
+    Edited By: Chris Joubert
     cogden@cs50.harvard.edu
 
     A simple state used to display the player's score before they
@@ -23,6 +24,12 @@ function ScoreState:update(dt)
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         gStateMachine:change('countdown')
     end
+
+    -- prevents pausing in score state
+    if IS_PAUSED then
+        IS_PAUSED = false
+    end
+
 end
 
 function ScoreState:render()
@@ -38,10 +45,10 @@ function ScoreState:render()
     -- over 60 gets gold
     local trophy =  love.graphics.newImage('bronze_trophy.png')
 
-    if self.score > 30 then
+    if self.score > 10 then
         trophy =  love.graphics.newImage('silver_trophy.png')
 
-    elseif self.score > 60 then
+    elseif self.score > 20 then
         trophy =  love.graphics.newImage('gold_trophy.png')
     end
     

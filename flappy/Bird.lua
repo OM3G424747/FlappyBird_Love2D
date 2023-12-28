@@ -1,6 +1,7 @@
 --[[
     Bird Class
     Author: Colton Ogden
+    Edited By: Chris Joubert
     cogden@cs50.harvard.edu
 
     The Bird is what we control in the game via clicking or the space bar; whenever we press either,
@@ -42,15 +43,19 @@ function Bird:collides(pipe)
 end
 
 function Bird:update(dt)
-    self.dy = self.dy + GRAVITY * dt
+    -- checks if the game is paused to halt bird movement
+    if not IS_PAUSED then
+        self.dy = self.dy + GRAVITY * dt
 
-    -- burst of anti-gravity when space or left mouse are pressed
-    if love.keyboard.wasPressed('space') or love.mouse.wasPressed(1) then
-        self.dy = -5
-        sounds['jump']:play()
+        -- burst of anti-gravity when space or left mouse are pressed
+        if love.keyboard.wasPressed('space') or love.mouse.wasPressed(1) then
+            self.dy = -5
+            sounds['jump']:play()
+        end
+
+        self.y = self.y + self.dy
+
     end
-
-    self.y = self.y + self.dy
 end
 
 function Bird:render()

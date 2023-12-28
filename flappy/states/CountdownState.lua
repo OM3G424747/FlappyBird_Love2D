@@ -1,6 +1,7 @@
 --[[
     Countdown State
     Author: Colton Ogden
+    Edited By: Chris Joubert
     cogden@cs50.harvard.edu
 
     Counts down visually on the screen (3,2,1) so that the player knows the
@@ -37,6 +38,12 @@ function CountdownState:update(dt)
             gStateMachine:change('play')
         end
     end
+
+    -- prevents pausing in countdown state
+    if IS_PAUSED then
+        IS_PAUSED = false
+    end
+
 end
 
 function CountdownState:render()
