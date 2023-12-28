@@ -60,14 +60,12 @@ function PlayState:update(dt)
                 
             end    
 
-            y_debug = y
             self.lastY = y
 
             -- add a new pipe pair at the end of the screen at our new Y
             table.insert(self.pipePairs, PipePair(y))
 
             -- reset timer
-
             self.timer = 0
         end    
     end
